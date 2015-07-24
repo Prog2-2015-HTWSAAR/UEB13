@@ -21,20 +21,18 @@ public:
 };
 class Auswertung {
 public:
-	static const char* error_std;
-	static const int ZERO_VALUE;
-	static const int HIGH_VALUE;
 	Auswertung();
-	void laden(string filename);
-
 	void runReadIn(string fileName);
-	void ausgebenFaecher();
-	void ausgebenMatrikelNr();
-	static const int maxAnzahlErgebnisse = 500;
-	string toString() const;
 	friend ostream& operator<< (ostream& o, const Auswertung& ausw);
 
 private:
+	static const char* error_std;
+	static const int ZERO_VALUE;
+	static const int HIGH_VALUE;
+	static const int maxAnzahlErgebnisse = 500;
+	string toString() const;
+	void ausgebenFaecher();
+	void ausgebenMatrikelNr();
 	void ausgabe();
 	void startReadProgress();
 	void trim(string& str);
