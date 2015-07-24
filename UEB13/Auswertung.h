@@ -14,7 +14,7 @@
 #include <cstring>
 #include <string>
 #include <sstream>    
-
+#include <stdexcept>
 class FileReadFailtureException : public logic_error {
 public:
 	FileReadFailtureException(const string& msg = "") : logic_error(msg) {}
