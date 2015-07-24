@@ -33,7 +33,7 @@ void Auswertung::startReadProgress(){
 //			splitStringToThreeStrings(completeLine, matrikelNrString, fachbezeichnung, notenString);
 //			matrikelNr = strToMatrikelnummer(matrikelNrString);
 //			note = strToNote(notenString);
-			stringstream linestream;
+			linestream.clear();
 			linestream.str(completeLine);
 			linestream >> matrikelNr;
 			linestream >> fachbezeichnung;
@@ -67,7 +67,7 @@ bool Auswertung::fileExists(string fileName) {
 int Auswertung::strToMatrikelnummer(string s){
 	int mtNummer = 0;
 	//mtNummer = stoi(s);
-	if (mtNummer <= 0 && mtNummer >= 99999999999999){
+	if (mtNummer <= 99999 && mtNummer >= 99999999999999){
 		throw FileReadFailtureException("Matrikelnummer konnte nicht ermittelt werden");
 	}
 	return mtNummer;

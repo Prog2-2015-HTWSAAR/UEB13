@@ -47,6 +47,7 @@ private:
 	int lines;
 	string fileName;
 	fstream file;
+	stringstream linestream;
 };
 
 #endif /* AUSWERTUNG_H_ */
