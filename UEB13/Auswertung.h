@@ -30,7 +30,9 @@ public:
 	void ausgebenFaecher();
 	void ausgebenMatrikelNr();
 	static const int maxAnzahlErgebnisse = 500;
+	string toString() const;
 private:
+	void ausgabe();
 	void startReadProgress();
 	void trim(string& str);
 	void splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString);

@@ -6,6 +6,7 @@
  */
 
 #include "Ergebnis.h"
+#include <sstream>
 
 Ergebnis::Ergebnis() {
 	this->matrikelnummer = 0;
@@ -13,3 +14,11 @@ Ergebnis::Ergebnis() {
 	this->note = 0.0;
 }
 
+ostream& operator<<(ostream& o, const Ergebnis& ergebnis){
+	return o << ergebnis.toString();
+}
+string Ergebnis::toString() const {
+	ostringstream o;
+	o << matrikelnummer << " | " << fachbezeichnung << " | " << note << endl;
+	return o.str();
+}

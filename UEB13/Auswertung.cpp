@@ -28,6 +28,7 @@ bool Auswertung::runReadIn(){
 		file.open(fName);
 		startReadProgress();
 		file.close();
+		toString();
 	}
 	else{
 		cout << "FEHLERHAFTER DATEINAME" << endl;
@@ -41,6 +42,7 @@ void Auswertung::startReadProgress(){
 	double note;
 	while (getline(file, completeLine)){
 		try{
+			lines++;
 			trim(completeLine);
 			splitStringToThreeStrings(completeLine, matrikelNrString, fachbezeichnung, notenString);
 			matrikelNr = strToMatrikelnummer(matrikelNrString);
@@ -52,9 +54,8 @@ void Auswertung::startReadProgress(){
 			//cout << note << endl;
 			anzahlErgebnisse++;
 		}
-
 		catch (FileReadFailtureException& e){
-			cout << error_std << e.what() << endl;
+			cout << error_std << e.what() << lines << endl;
 		}
 	}
 }
@@ -87,6 +88,12 @@ double Auswertung::strToNote(string s){
 	}
 	return note;
 }
+void Auswertung::ausgabe(){
+	int runner = 0;
+	while (runner <= anzahlErgebnisse){
+		cout << *ergebnisTab[1] << endl;
+	}
+}
 string Auswertung::readStringInput() {
 	string input;
 	cin >> input;
@@ -108,4 +115,13 @@ void Auswertung::trim(string& str) {
 	}
 	else
 		str.erase(str.begin(), str.end());
+
+}
+string Auswertung::toString() const {
+	ostringstream o;
+	for (int i = 0; i < anzahlErgebnisse; i++) {
+		o << ergebnisTab[i]->toString() << '\n';
+	}
+	o << endl;
+	return o.str();
 }

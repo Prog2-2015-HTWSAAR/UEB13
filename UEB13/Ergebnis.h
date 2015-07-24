@@ -34,6 +34,8 @@ public:
 	void setMatrikelnummer(int m){
 		matrikelnummer = m;
 	}
+	friend ostream& operator<< (ostream& o, const Ergebnis& ergebnis);
+	string toString() const;
 
 private:
 	int matrikelnummer;
