@@ -31,6 +31,8 @@ public:
 	void ausgebenMatrikelNr();
 	static const int maxAnzahlErgebnisse = 500;
 	string toString() const;
+	friend ostream& operator<< (ostream& o, const Auswertung& ausw);
+
 private:
 	void ausgabe();
 	void startReadProgress();

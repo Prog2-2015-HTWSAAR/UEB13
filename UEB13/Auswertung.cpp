@@ -28,7 +28,7 @@ bool Auswertung::runReadIn(){
 		file.open(fName);
 		startReadProgress();
 		file.close();
-		toString();
+		cout << toString();
 	}
 	else{
 		cout << "FEHLERHAFTER DATEINAME" << endl;
@@ -47,7 +47,8 @@ void Auswertung::startReadProgress(){
 			splitStringToThreeStrings(completeLine, matrikelNrString, fachbezeichnung, notenString);
 			matrikelNr = strToMatrikelnummer(matrikelNrString);
 			note = strToNote(notenString);
-			ergebnisTab = new Ergebnis*[anzahlErgebnisse];
+			Ergebnis* erg = new Ergebnis(matrikelNr, fachbezeichnung, note);
+			ergebnisTab[anzahlErgebnisse] = erg;
 			//cout << completeLine << endl;
 			//cout << matrikelNr << endl; 
 			//cout << fachbezeichnung << endl;
@@ -90,8 +91,9 @@ double Auswertung::strToNote(string s){
 }
 void Auswertung::ausgabe(){
 	int runner = 0;
-	while (runner <= anzahlErgebnisse){
-		cout << *ergebnisTab[1] << endl;
+	while (runner < anzahlErgebnisse){
+		cout << ergebnisTab[runner]->getMatrikelnummer() << "\t" << /*ergebnisTab[runner]->getFachbezeichnung << "\t" <<*/ ergebnisTab[runner]->getNote() << "\t" << endl;
+		runner++;
 	}
 }
 string Auswertung::readStringInput() {
@@ -117,10 +119,18 @@ void Auswertung::trim(string& str) {
 		str.erase(str.begin(), str.end());
 
 }
+ostream& operator<<(ostream& o, const Auswertung& ausw){
+	for (int i = 0; i < ausw.anzahlErgebnisse; i++) {
+		o << *ausw.ergebnisTab[i] << endl;
+	}
+	return o << ausw.toString();
+}
 string Auswertung::toString() const {
 	ostringstream o;
+	o << "Matrikelnummer" << "\t" << "Fachbezeichnung" << "\t" << "\t" << "Note" << "\n";
+
 	for (int i = 0; i < anzahlErgebnisse; i++) {
-		o << ergebnisTab[i]->toString() << '\n';
+		o << ergebnisTab[i]->toString();
 	}
 	o << endl;
 	return o.str();

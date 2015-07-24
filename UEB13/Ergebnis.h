@@ -13,8 +13,10 @@ using namespace std;
 class Ergebnis {
 public:
 	Ergebnis();
+	Ergebnis(int eMatrNummer, string eFachbezeich, double eNote);
 
-	const string& getFachbezeichnung() const {
+
+	string getFachbezeichnung() const {
 		return fachbezeichnung;
 	}
 
