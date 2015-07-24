@@ -7,7 +7,7 @@
 
 #ifndef ERGEBNIS_H_
 #define ERGEBNIS_H_
-
+#include <string>
 using namespace std;
 
 class Ergebnis {
@@ -24,6 +24,15 @@ public:
 
 	double getNote() const {
 		return note;
+	}
+	void setNote(double n){
+		note = n;
+	}
+	void setFachbezeichnung(string s){
+		fachbezeichnung = s;
+	}
+	void setMatrikelnummer(int m){
+		matrikelnummer = m;
 	}
 
 private:

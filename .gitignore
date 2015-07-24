@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+UEB13/UEB13.vcxproj
+UEB13/UEB13.vcxproj.filters
+*.tlog
+*.sdf
+*.sln
+*.idb
