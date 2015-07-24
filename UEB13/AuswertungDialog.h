@@ -13,7 +13,6 @@ class AuswertungDialog
 {
 public:
 	void startDialog();
-
 	AuswertungDialog();
 	~AuswertungDialog();
 private:

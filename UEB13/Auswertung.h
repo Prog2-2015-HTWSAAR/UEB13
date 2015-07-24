@@ -26,7 +26,8 @@ public:
 	static const int HIGH_VALUE;
 	Auswertung();
 	void laden(string filename);
-	void initAuswertung();
+
+	void runReadIn(string fileName);
 	void ausgebenFaecher();
 	void ausgebenMatrikelNr();
 	static const int maxAnzahlErgebnisse = 500;
@@ -38,7 +39,6 @@ private:
 	void startReadProgress();
 	void trim(string& str);
 	void splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString);
-	bool runReadIn();
 	int strToMatrikelnummer(string s);
 	double strToNote(string s);
 	string readStringInput();

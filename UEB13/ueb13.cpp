@@ -1,6 +1,6 @@
-#include "Auswertung.h"
+#include "AuswertungDialog.h"
 using namespace std;
 int main(){
-	Auswertung auswert;
-	auswert.initAuswertung();
+	AuswertungDialog auswert;
+	auswert.startDialog();
 }

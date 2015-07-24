@@ -14,26 +14,12 @@ Auswertung::Auswertung() {
 	lines = 0;
 	ergebnisTab = new Ergebnis*[maxAnzahlErgebnisse];
 }
-void Auswertung::initAuswertung(){
-	do{} while (!runReadIn());
-}
-bool Auswertung::runReadIn(){
-	bool dateiExist = false;
-	cout << "Bitte Dateiname Eingeben: ";
-	fileName = readStringInput();
-	if (fileExists(fileName)){
-		dateiExist = true;
+void Auswertung::runReadIn(string fileName){
 		const char* fName = fileName.c_str();
 		file.open(fName);
 		startReadProgress();
 		file.close();
 		cout << toString();
-	}
-	else{
-		cout << "FEHLERHAFTER DATEINAME" << endl;
-		dateiExist = false;
-	}
-	return dateiExist;
 }
 void Auswertung::startReadProgress(){
 

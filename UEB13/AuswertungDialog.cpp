@@ -11,16 +11,17 @@ void AuswertungDialog::startDialog(){
 }
 
 bool AuswertungDialog::readFileName(){
+	cout << "fileName: ";
 	eingabe = readStringInput();
 	if (fileExists(eingabe)){
 		fileExist = true;
-		auswert.initAuswertung();
+		auswert.runReadIn(eingabe);
 	}
 	else {
 		fileExist = false;
 		cout << error_std;
 	}
-
+	return fileExist;
 }
 string AuswertungDialog::readStringInput() {
 	string input;
