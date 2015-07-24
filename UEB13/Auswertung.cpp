@@ -4,7 +4,6 @@
  *  Created on: 21.07.2015
  *      Author: sbastian
  */
-
 #include "Auswertung.h"
 const int Auswertung::ZERO_VALUE = 0;
 const int Auswertung::HIGH_VALUE = 1000;
@@ -37,22 +36,28 @@ bool Auswertung::runReadIn(){
 	return dateiExist;
 }
 void Auswertung::startReadProgress(){
+
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
 	int matrikelNr;
 	double note;
 	while (getline(file, completeLine)){
 		try{
 			lines++;
-			trim(completeLine);
-			splitStringToThreeStrings(completeLine, matrikelNrString, fachbezeichnung, notenString);
-			matrikelNr = strToMatrikelnummer(matrikelNrString);
-			note = strToNote(notenString);
+//			trim(completeLine);
+//			splitStringToThreeStrings(completeLine, matrikelNrString, fachbezeichnung, notenString);
+//			matrikelNr = strToMatrikelnummer(matrikelNrString);
+//			note = strToNote(notenString);
+			stringstream linestream;
+			linestream.str(completeLine);
+			linestream >> matrikelNr;
+			linestream >> fachbezeichnung;
+			linestream >> note;
 			Ergebnis* erg = new Ergebnis(matrikelNr, fachbezeichnung, note);
 			ergebnisTab[anzahlErgebnisse] = erg;
-			//cout << completeLine << endl;
-			//cout << matrikelNr << endl; 
-			//cout << fachbezeichnung << endl;
-			//cout << note << endl;
+//			cout << completeLine << endl;
+//			cout << matrikelNr << endl;
+//			cout << fachbezeichnung << endl;
+//			cout << note << endl;
 			anzahlErgebnisse++;
 		}
 		catch (FileReadFailtureException& e){
@@ -74,16 +79,16 @@ bool Auswertung::fileExists(string fileName) {
 	return infile.good();
 }
 int Auswertung::strToMatrikelnummer(string s){
-	int mtNummer;
-	mtNummer = stoi(s);
+	int mtNummer = 0;
+	//mtNummer = stoi(s);
 	if (mtNummer <= 0 && mtNummer >= 99999999999999){
 		throw FileReadFailtureException("Matrikelnummer konnte nicht ermittelt werden");
 	}
 	return mtNummer;
 }
 double Auswertung::strToNote(string s){
-	double note;
-	note = stod(s);
+	double note = 0.0;
+	//note = stod(s);
 	if (note <= 0 && note > 6){
 		throw FileReadFailtureException("Note konnte nicht ermittelt werden");
 	}
