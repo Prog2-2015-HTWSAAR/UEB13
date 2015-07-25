@@ -8,6 +8,9 @@
 #include <math.h>
 const int Auswertung::ZERO_VALUE = 0;
 const int Auswertung::HIGH_VALUE = 1000;
+const int Auswertung::UPPER_BORDER_MATRIKEL_NR = 9999999;
+const int Auswertung::LOWER_BORDER_MATRIKEL_NR = 99999;
+
 const char* Auswertung::error_std = "_ERROR_";
 
 Auswertung::Auswertung() {
@@ -16,35 +19,28 @@ Auswertung::Auswertung() {
 	ergebnisTab = new Ergebnis*[maxAnzahlErgebnisse];
 }
 void Auswertung::runReadIn(string fileName){
+		fstream file;
 		const char* fName = fileName.c_str();
 		file.open(fName);
-		startReadProgress();
+		startReadProgress(file);
 		file.close();
-		cout << toString();
+		cout << sortierteAusgabe();
 }
-void Auswertung::startReadProgress(){
-
+void Auswertung::startReadProgress(fstream& file){
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
 	int matrikelNr;
 	double note;
+	stringstream linestream;
 	while (getline(file, completeLine)){
 		try{
 			lines++;
-//			trim(completeLine);
-//			splitStringToThreeStrings(completeLine, matrikelNrString, fachbezeichnung, notenString);
-//			matrikelNr = strToMatrikelnummer(matrikelNrString);
-//			note = strToNote(notenString);
 			linestream.clear();
 			linestream.str(completeLine);
-			linestream >> matrikelNr;
+			matrikelNr = strToMatrikelnummer(linestream);
 			linestream >> fachbezeichnung;
-			linestream >> note;
+			note = strToNote(linestream);
 			Ergebnis* erg = new Ergebnis(matrikelNr, fachbezeichnung, note);
 			ergebnisTab[anzahlErgebnisse] = erg;
-//			cout << completeLine << endl;
-//			cout << matrikelNr << endl;
-//			cout << fachbezeichnung << endl;
-//			cout << note << endl;
 			anzahlErgebnisse++;
 		}
 		catch (AuswertungsException& e){
@@ -65,17 +61,18 @@ bool Auswertung::fileExists(string fileName) {
 	ifstream infile(constName);
 	return infile.good();
 }
-int Auswertung::strToMatrikelnummer(string s){
-	int mtNummer = 0;
+int Auswertung::strToMatrikelnummer(stringstream& linestream){
+	int matrikelNr;
+	linestream >> matrikelNr;
 	//mtNummer = stoi(s);
-	if (mtNummer <= 99999 && mtNummer >= 99999999999999){
+	if (matrikelNr <= LOWER_BORDER_MATRIKEL_NR && matrikelNr >= UPPER_BORDER_MATRIKEL_NR){
 		throw AuswertungsException("Matrikelnummer konnte nicht ermittelt werden");
 	}
-	return mtNummer;
+	return matrikelNr;
 }
-double Auswertung::strToNote(string s){
+double Auswertung::strToNote(stringstream& linestream) {
 	double note = 0.0;
-	//note = stod(s);
+	linestream >> note;
 	if (note <= 0 && note > 6){
 		throw AuswertungsException("Note konnte nicht ermittelt werden");
 	}
@@ -149,8 +146,8 @@ double  Auswertung::berechneNotenschnitt(const Ergebnis** ergebnisse, int size, 
 	int counter = 0;
 	double note = 0.0;
 	//summiere Noten der Matrikelnummer und zaehle Anzahl
-	while((i < size) && (ergebnisse[i]->matrikelnummer == matrikelNr)){
-		note += ergebnisse[i]->note;
+	while((i < size) && (ergebnisse[i]->getMatrikelnummer() == matrikelNr)){
+		note += ergebnisse[i]->getNote();
 		counter++;
 	}
 	//berechne Durchschnitt
@@ -158,4 +155,33 @@ double  Auswertung::berechneNotenschnitt(const Ergebnis** ergebnisse, int size, 
 	//Auf zwei stellen runden
 	note = round(note * 100) / 100;
 	return note;
+}
+string Auswertung::sortierteAusgabe(){
+	ostringstream o;
+	int innerRunner = 0;
+	int outputRunner = 0;
+	int absoluteMinimum = LOWER_BORDER_MATRIKEL_NR;
+	int foundMinimum;
+	int found = 0;
+	o << "Matrikelnummer" << "\t" << "Fachbezeichnung" << "\t" << "\t" << "Note" << "\n";
+	while (found != anzahlErgebnisse) {
+		foundMinimum = UPPER_BORDER_MATRIKEL_NR;
+		while(innerRunner < anzahlErgebnisse) {
+			if (ergebnisTab[innerRunner]->getMatrikelnummer() > absoluteMinimum && ergebnisTab[innerRunner]->getMatrikelnummer() < foundMinimum) {
+				foundMinimum = ergebnisTab[innerRunner]->getMatrikelnummer();
+			}
+			innerRunner++;
+		}
+		while (outputRunner < anzahlErgebnisse) {
+			if (ergebnisTab[outputRunner]->getMatrikelnummer() == foundMinimum) {
+				o << ergebnisTab[outputRunner]->toString();
+				found++;
+			}
+			outputRunner++;
+		}
+		absoluteMinimum = foundMinimum;
+		innerRunner = 0;
+		outputRunner = 0;
+	}
+	return o.str();
 }

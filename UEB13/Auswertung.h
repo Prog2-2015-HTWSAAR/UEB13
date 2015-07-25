@@ -30,6 +30,9 @@ private:
 	static const int ZERO_VALUE;
 	static const int HIGH_VALUE;
 	static const int maxAnzahlErgebnisse = 500;
+	static const int UPPER_BORDER_MATRIKEL_NR;
+	static const int LOWER_BORDER_MATRIKEL_NR;
+	string sortierteAusgabe();
 	string toString() const;
 	void ausgebenFaecher();
 	void sortArrayFaecher(Ergebnis** ergebnisse, int size);
@@ -37,20 +40,18 @@ private:
 	void sortArrayMatrikelNr(Ergebnis** ergebnisse, int size);
 	double berechneNotenschnitt(const Ergebnis** ergebnisse, int size, int start, int matrikelNr);
 	void ausgabe();
-	void startReadProgress();
+	void startReadProgress(fstream& file);
 	void trim(string& str);
 	void splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString);
-	int strToMatrikelnummer(string s);
-	double strToNote(string s);
+	int strToMatrikelnummer(stringstream& linestream);
+	double strToNote(stringstream& linestream);
 	string readStringInput();
 	void clearInput();
 	bool fileExists(string fileName);
 	Ergebnis** ergebnisTab;
 	int anzahlErgebnisse;
+
 	int lines;
-	string fileName;
-	fstream file;
-	stringstream linestream;
 };
 
 #endif /* AUSWERTUNG_H_ */
