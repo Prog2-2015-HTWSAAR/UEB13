@@ -24,7 +24,10 @@ void Auswertung::runReadIn(string fileName){
 		file.open(fName);
 		startReadProgress(file);
 		file.close();
-		cout << sortierteAusgabe();
+		cout << "Ausgabe nach Matrikelnummer" << endl << endl			
+			<< sortierteAusgabeMatrikel() << endl
+			<< "Ausgabe nach Fachbezeichnung" << endl << endl 
+			<< sortierteAusgabeBezeichnung() << endl;
 }
 void Auswertung::startReadProgress(fstream& file){
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
@@ -39,6 +42,7 @@ void Auswertung::startReadProgress(fstream& file){
 			matrikelNr = strToMatrikelnummer(linestream);
 			linestream >> fachbezeichnung;
 			note = strToNote(linestream);
+			checkExistence(matrikelNr, fachbezeichnung, note);
 			Ergebnis* erg = new Ergebnis(matrikelNr, fachbezeichnung, note);
 			ergebnisTab[anzahlErgebnisse] = erg;
 			anzahlErgebnisse++;
@@ -62,18 +66,18 @@ bool Auswertung::fileExists(string fileName) {
 	return infile.good();
 }
 int Auswertung::strToMatrikelnummer(stringstream& linestream){
-	int matrikelNr;
+	int matrikelNr = -1;
 	linestream >> matrikelNr;
 	//mtNummer = stoi(s);
-	if (matrikelNr <= LOWER_BORDER_MATRIKEL_NR && matrikelNr >= UPPER_BORDER_MATRIKEL_NR){
-		throw AuswertungsException("Matrikelnummer konnte nicht ermittelt werden");
+	if (matrikelNr <= LOWER_BORDER_MATRIKEL_NR || matrikelNr >= UPPER_BORDER_MATRIKEL_NR){
+		throw AuswertungsException("Matrikelnummer konnte nicht ermittelt werden Line: ");
 	}
 	return matrikelNr;
 }
 double Auswertung::strToNote(stringstream& linestream) {
-	double note = 0.0;
+	double note = -1.0;
 	linestream >> note;
-	if (note <= 0 && note > 6){
+	if (note <= 0 || note > 6){
 		throw AuswertungsException("Note konnte nicht ermittelt werden");
 	}
 	return note;
@@ -156,7 +160,7 @@ double  Auswertung::berechneNotenschnitt(const Ergebnis** ergebnisse, int size, 
 	note = round(note * 100) / 100;
 	return note;
 }
-string Auswertung::sortierteAusgabe(){
+string Auswertung::sortierteAusgabeMatrikel(){
 	ostringstream o;
 	int innerRunner = 0;
 	int outputRunner = 0;
@@ -184,4 +188,48 @@ string Auswertung::sortierteAusgabe(){
 		outputRunner = 0;
 	}
 	return o.str();
+}
+string Auswertung::sortierteAusgabeBezeichnung() {
+	ostringstream o;
+	int found = 0;
+	int position = 0;
+	int runner = 0;
+	int seperator = 0;
+	bool exist = false;
+	o << "Matrikelnummer" << "\t" << "Fachbezeichnung" << "\t" << "\t" << "Note" << "\n";
+	while (found != anzahlErgebnisse) {
+		runner = 0;
+		while(runner < seperator){
+			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
+				exist = true;
+			}
+			runner++;
+		}
+		runner = position;
+		while (runner < anzahlErgebnisse && !exist){ 
+			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
+				o << ergebnisTab[runner]->toString();
+
+				found++;
+			}
+			runner++;
+		}
+		exist = false;
+		seperator++;
+		position++;
+	}
+	return o.str();
+}
+
+void Auswertung::checkExistence(int matrikel, string bezeichnung, double note) {
+	int runner = 0;
+	while (runner < anzahlErgebnisse) {
+		if (matrikel == ergebnisTab[runner]->getMatrikelnummer()) {
+			if (bezeichnung.compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
+				throw AuswertungsException("Objekt existiert schon Line: ");
+				
+			}
+		}
+		runner++;
+	}
 }

@@ -7,7 +7,7 @@ AuswertungDialog::AuswertungDialog(){}
 AuswertungDialog::~AuswertungDialog(){}
 
 void AuswertungDialog::startDialog(){
-	do{} while (!readFileName());
+	while (!readFileName()) {}
 }
 
 bool AuswertungDialog::readFileName(){

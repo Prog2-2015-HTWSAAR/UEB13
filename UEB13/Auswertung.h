@@ -32,13 +32,15 @@ private:
 	static const int maxAnzahlErgebnisse = 500;
 	static const int UPPER_BORDER_MATRIKEL_NR;
 	static const int LOWER_BORDER_MATRIKEL_NR;
-	string sortierteAusgabe();
+	void checkExistence(int matrikel, string bezeichnung, double note);
 	string toString() const;
 	void ausgebenFaecher();
 	void sortArrayFaecher(Ergebnis** ergebnisse, int size);
 	void ausgebenMatrikelNr();
 	void sortArrayMatrikelNr(Ergebnis** ergebnisse, int size);
 	double berechneNotenschnitt(const Ergebnis** ergebnisse, int size, int start, int matrikelNr);
+	string sortierteAusgabeMatrikel();
+	string sortierteAusgabeBezeichnung();
 	void ausgabe();
 	void startReadProgress(fstream& file);
 	void trim(string& str);
