@@ -27,7 +27,8 @@ void Auswertung::runReadIn(string fileName){
 		cout << "Ausgabe nach Matrikelnummer" << endl << endl			
 			<< sortierteAusgabeMatrikel() << endl
 			<< "Ausgabe nach Fachbezeichnung" << endl << endl 
-			<< sortierteAusgabeBezeichnung() << endl;
+			<< sortierteAusgabeBezeichnung() << endl 
+			<< berechneNotenschnitt();
 }
 void Auswertung::startReadProgress(fstream& file){
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
@@ -145,21 +146,42 @@ void Auswertung::sortArrayMatrikelNr(Ergebnis** ergebnisse, int size){
 	//TODO implement this method!
 }
 
-double  Auswertung::berechneNotenschnitt(const Ergebnis** ergebnisse, int size, int start, int matrikelNr){
-	int i = start;
-	int counter = 0;
-	double note = 0.0;
-	//summiere Noten der Matrikelnummer und zaehle Anzahl
-	while((i < size) && (ergebnisse[i]->getMatrikelnummer() == matrikelNr)){
-		note += ergebnisse[i]->getNote();
-		counter++;
+string Auswertung::berechneNotenschnitt(){
+		ostringstream o;
+		int innerRunner = 0;
+		int outputRunner = 0;
+		int absoluteMinimum = LOWER_BORDER_MATRIKEL_NR;
+		int foundMinimum;
+		int found = 0;
+		double note = 0.0;
+		int haufigkeit = 0;
+		o << "Auswertung nach MatrikelNr:" << "\n" << "Matrikelnummer" << "\t" << "Durchschnittsnote" << "\n";
+		while (found != anzahlErgebnisse) {
+			foundMinimum = UPPER_BORDER_MATRIKEL_NR;
+			while (innerRunner < anzahlErgebnisse) {
+				if (ergebnisTab[innerRunner]->getMatrikelnummer() > absoluteMinimum && ergebnisTab[innerRunner]->getMatrikelnummer() < foundMinimum) {
+					foundMinimum = ergebnisTab[innerRunner]->getMatrikelnummer();
+				}
+				innerRunner++;
+			}
+			while (outputRunner < anzahlErgebnisse) {
+				if (ergebnisTab[outputRunner]->getMatrikelnummer() == foundMinimum) {
+					note += ergebnisTab[outputRunner]->getNote();
+					found++;
+					haufigkeit++;
+				}
+				outputRunner++;
+			}
+			note /= haufigkeit;
+			o << foundMinimum << "\t" << "\t" << note << "\n";
+			absoluteMinimum = foundMinimum;
+			innerRunner = 0;
+			haufigkeit = 0;
+			outputRunner = 0;
+			note = 0.0;
+		}
+		return o.str();
 	}
-	//berechne Durchschnitt
-	note /= counter;
-	//Auf zwei stellen runden
-	note = round(note * 100) / 100;
-	return note;
-}
 string Auswertung::sortierteAusgabeMatrikel(){
 	ostringstream o;
 	int innerRunner = 0;
@@ -191,13 +213,24 @@ string Auswertung::sortierteAusgabeMatrikel(){
 }
 string Auswertung::sortierteAusgabeBezeichnung() {
 	ostringstream o;
+	Ergebnis** teilTab;
+	teilTab = new Ergebnis*[anzahlErgebnisse];
 	int found = 0;
+	int foundTab = 0;
+	int sizeTeilTab = 0;
 	int position = 0;
 	int runner = 0;
 	int seperator = 0;
+	int minTabPos = 0;
 	bool exist = false;
+	int tabPosition= 0;
+	double smallestNote;
+	double minPosition;
 	o << "Matrikelnummer" << "\t" << "Fachbezeichnung" << "\t" << "\t" << "Note" << "\n";
 	while (found != anzahlErgebnisse) {
+		tabPosition = 0;
+		sizeTeilTab = minTabPos;
+		minPosition = 0.0;
 		runner = 0;
 		while(runner < seperator){
 			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
@@ -208,15 +241,39 @@ string Auswertung::sortierteAusgabeBezeichnung() {
 		runner = position;
 		while (runner < anzahlErgebnisse && !exist){ 
 			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
-				o << ergebnisTab[runner]->toString();
-
+				//o << ergebnisTab[runner]->toString();
+				teilTab[sizeTeilTab] = ergebnisTab[runner];
+				sizeTeilTab++;
 				found++;
 			}
 			runner++;
 		}
+		while (foundTab < sizeTeilTab) {
+			runner = minTabPos;
+			smallestNote = 6;
+			while (runner < sizeTeilTab) {
+				if (teilTab[runner]->getNote() < smallestNote && teilTab[runner]->getNote() > minPosition) {
+					smallestNote = teilTab[runner]->getNote();
+				}
+				runner++;
+			}
+			runner = minTabPos;
+			while (runner  < sizeTeilTab) {
+				if (teilTab[runner]->getNote() == smallestNote) {
+					o << teilTab[runner]->toString();
+					foundTab++;
+				}
+				runner++;
+			}
+			minPosition = smallestNote;
+			smallestNote = 6.0;
+			tabPosition++;
+		}
+		minTabPos = sizeTeilTab;
 		exist = false;
 		seperator++;
 		position++;
+
 	}
 	return o.str();
 }

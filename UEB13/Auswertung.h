@@ -38,7 +38,7 @@ private:
 	void sortArrayFaecher(Ergebnis** ergebnisse, int size);
 	void ausgebenMatrikelNr();
 	void sortArrayMatrikelNr(Ergebnis** ergebnisse, int size);
-	double berechneNotenschnitt(const Ergebnis** ergebnisse, int size, int start, int matrikelNr);
+	string berechneNotenschnitt();
 	string sortierteAusgabeMatrikel();
 	string sortierteAusgabeBezeichnung();
 	void ausgabe();
