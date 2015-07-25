@@ -38,8 +38,10 @@ public:
 	}
 	friend ostream& operator<< (ostream& o, const Ergebnis& ergebnis);
 	string toString() const;
-
+	int compareFaecher(const Ergebnis& ergebnis);
+	int compareMatrikelNr(const Ergebnis& ergebnis);
 private:
+	int compareDoubles(double a, double b);
 	int matrikelnummer;
 	string fachbezeichnung;
 	double note;

@@ -15,9 +15,9 @@
 #include <string>
 #include <sstream>    
 #include <stdexcept>
-class FileReadFailtureException : public logic_error {
+class AuswertungsException : public logic_error {
 public:
-	FileReadFailtureException(const string& msg = "") : logic_error(msg) {}
+	AuswertungsException(const string& msg = "") : logic_error(msg) {}
 };
 class Auswertung {
 public:
@@ -32,7 +32,10 @@ private:
 	static const int maxAnzahlErgebnisse = 500;
 	string toString() const;
 	void ausgebenFaecher();
+	void sortArrayFaecher(Ergebnis** ergebnisse, int size);
 	void ausgebenMatrikelNr();
+	void sortArrayMatrikelNr(Ergebnis** ergebnisse, int size);
+	double berechneNotenschnitt(const Ergebnis** ergebnisse, int size, int start, int matrikelNr);
 	void ausgabe();
 	void startReadProgress();
 	void trim(string& str);

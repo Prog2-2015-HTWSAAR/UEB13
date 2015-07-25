@@ -5,6 +5,7 @@
  *      Author: sbastian
  */
 #include "Auswertung.h"
+#include <math.h>
 const int Auswertung::ZERO_VALUE = 0;
 const int Auswertung::HIGH_VALUE = 1000;
 const char* Auswertung::error_std = "_ERROR_";
@@ -46,7 +47,7 @@ void Auswertung::startReadProgress(){
 //			cout << note << endl;
 			anzahlErgebnisse++;
 		}
-		catch (FileReadFailtureException& e){
+		catch (AuswertungsException& e){
 			cout << error_std << e.what() << lines << endl;
 		}
 	}
@@ -68,7 +69,7 @@ int Auswertung::strToMatrikelnummer(string s){
 	int mtNummer = 0;
 	//mtNummer = stoi(s);
 	if (mtNummer <= 99999 && mtNummer >= 99999999999999){
-		throw FileReadFailtureException("Matrikelnummer konnte nicht ermittelt werden");
+		throw AuswertungsException("Matrikelnummer konnte nicht ermittelt werden");
 	}
 	return mtNummer;
 }
@@ -76,7 +77,7 @@ double Auswertung::strToNote(string s){
 	double note = 0.0;
 	//note = stod(s);
 	if (note <= 0 && note > 6){
-		throw FileReadFailtureException("Note konnte nicht ermittelt werden");
+		throw AuswertungsException("Note konnte nicht ermittelt werden");
 	}
 	return note;
 }
@@ -125,4 +126,36 @@ string Auswertung::toString() const {
 	}
 	o << endl;
 	return o.str();
+}
+
+void Auswertung::ausgebenFaecher(){
+	Ergebnis** faecherErgebnisse = new Ergebnis*[anzahlErgebnisse];
+	//TODO implement this method!
+}
+
+void Auswertung::ausgebenMatrikelNr(){
+	//TODO implement this method!
+}
+
+void Auswertung::sortArrayFaecher(Ergebnis** ergebniss, int size){
+	//TODO implement this method!
+}
+void Auswertung::sortArrayMatrikelNr(Ergebnis** ergebnisse, int size){
+	//TODO implement this method!
+}
+
+double  Auswertung::berechneNotenschnitt(const Ergebnis** ergebnisse, int size, int start, int matrikelNr){
+	int i = start;
+	int counter = 0;
+	double note = 0.0;
+	//summiere Noten der Matrikelnummer und zaehle Anzahl
+	while((i < size) && (ergebnisse[i]->matrikelnummer == matrikelNr)){
+		note += ergebnisse[i]->note;
+		counter++;
+	}
+	//berechne Durchschnitt
+	note /= counter;
+	//Auf zwei stellen runden
+	note = round(note * 100) / 100;
+	return note;
 }

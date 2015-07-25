@@ -36,3 +36,32 @@ string Ergebnis::toString() const {
 	
 	return o.str();
 }
+
+int Ergebnis::compareFaecher(const Ergebnis& ergebnis){
+	int vergleich = 0;
+	vergleich = this->fachbezeichnung.compare(ergebnis.fachbezeichnung);
+	if(vergleich != 0){
+		return vergleich;
+	}else{
+		vergleich = compareDoubles(note, ergebnis.note);
+		if(vergleich != 0){
+			return vergleich;
+		}else{
+			return compareMatrikelNr(ergebnis);
+		}
+	}
+}
+
+int Ergebnis::compareMatrikelNr(const Ergebnis& ergebnis){
+	return compareDoubles((double) matrikelnummer, (double) ergebnis.matrikelnummer);
+}
+
+int Ergebnis::compareDoubles(double a, double b){
+	if(a > b){
+		return 1;
+	}
+	if(a < b){
+		return -1;
+	}
+	return 0;
+}
