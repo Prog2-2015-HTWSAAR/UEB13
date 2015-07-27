@@ -31,9 +31,9 @@ void Auswertung::runReadIn(string fileName) {
 	cout << toString();
 
 	sortArrayFaecher();
-	//anzahlVerschiedenerSaetze = berechneNotenschnitt(duchschnittNote);
+	anzahlVerschiedenerSaetze = berechneNotenschnitt(duchschnittNote);
 	cout << toString();
-//	ausgabeNotendurchschnitt(duchschnittNote, anzahlVerschiedenerSaetze);
+	ausgabeNotendurchschnitt(duchschnittNote, anzahlVerschiedenerSaetze);
 }
 void Auswertung::startReadProgress(fstream& file) {
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
@@ -158,21 +158,7 @@ void Auswertung::resetSorted() {
 	}
 }
 void Auswertung::sortArrayFaecher() {
-	Ergebnis** tempErgebnis = new Ergebnis*[anzahlErgebnisse];
-	int found = 0;
-	for (int i = 0; i < anzahlErgebnisse; i++) {
-		for (int j = 0; j < anzahlErgebnisse; j++) {
-			if (ergebnisTab[i]->compareFaecher(*ergebnisTab[j]) < 0) {
-				tempErgebnis[i] = ergebnisTab[j];
-				//ergebnisTab[j]->setSorted();
-				found++;
-			}
-		}
-		
-	}
-	resetSorted();
-	ergebnisTab = tempErgebnis;
-	/*Ergebnis** tempErgebnis = new Ergebnis*[anzahlErgebnisse+1];
+	Ergebnis** tempErgebnis = new Ergebnis*[anzahlErgebnisse+1];
 	int found = 0;
 	for (int i = 0; i < anzahlErgebnisse; i++) {
 		if (ergebnisTab[i]->getMatrikelnummer() > 0) {
@@ -190,7 +176,7 @@ void Auswertung::sortArrayFaecher() {
 		}
 	}
 	resetSorted();
-	ergebnisTab = tempErgebnis;	*/
+	ergebnisTab = tempErgebnis;	
 }
 
 void Auswertung::sortArrayMatrikelNr(Ergebnis** &ergebnisse, int size) {
