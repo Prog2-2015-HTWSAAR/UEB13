@@ -36,6 +36,15 @@ public:
 	void setMatrikelnummer(int m){
 		matrikelnummer = m;
 	}
+	void resetSorted() {
+		sorted = 0;
+	}
+	void setSorted() {
+		sorted = 1;
+	}
+	int getSorted() {
+		return sorted;
+	}
 	friend ostream& operator<< (ostream& o, const Ergebnis& ergebnis);
 	string toString() const;
 	int compareFaecher(const Ergebnis& ergebnis);
@@ -45,6 +54,7 @@ private:
 	int matrikelnummer;
 	string fachbezeichnung;
 	double note;
+	int sorted;
 };
 
 #endif /* ERGEBNIS_H_ */
