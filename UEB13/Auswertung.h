@@ -35,9 +35,12 @@ private:
 	void checkExistence(int matrikel, string bezeichnung, double note);
 	string toString() const;
 	void ausgebenFaecher();
-	void sortArrayFaecher(Ergebnis** ergebnisse, int size);
+	void sortArrayFaecher(Ergebnis** &ergebnisse, int size);
+	void sortArrayFaecher(Ergebnis** &ergebnisse, int size, int lowerBorder);
+	void sortArrayNote(Ergebnis** &ergebnisse, int size);
+	void sortArrayNote(Ergebnis** &ergebnisse, int size, int lowerBorder);
 	void ausgebenMatrikelNr();
-	void sortArrayMatrikelNr(Ergebnis** ergebnisse, int size);
+	void sortArrayMatrikelNr(Ergebnis** &ergebnisse, int size);
 	string berechneNotenschnitt();
 	string sortierteAusgabeMatrikel();
 	string sortierteAusgabeBezeichnung();

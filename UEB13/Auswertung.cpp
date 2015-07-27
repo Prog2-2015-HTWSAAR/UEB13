@@ -18,25 +18,27 @@ Auswertung::Auswertung() {
 	lines = 0;
 	ergebnisTab = new Ergebnis*[maxAnzahlErgebnisse];
 }
-void Auswertung::runReadIn(string fileName){
-		fstream file;
-		const char* fName = fileName.c_str();
-		file.open(fName);
-		startReadProgress(file);
-		file.close();
-		cout << "Ausgabe nach Matrikelnummer" << endl << endl			
-			<< sortierteAusgabeMatrikel() << endl
-			<< "Ausgabe nach Fachbezeichnung" << endl << endl 
-			<< sortierteAusgabeBezeichnung() << endl 
-			<< berechneNotenschnitt();
+void Auswertung::runReadIn(string fileName) {
+	fstream file;
+	const char* fName = fileName.c_str();
+	file.open(fName);
+	startReadProgress(file);
+	file.close();
+	sortArrayNote(ergebnisTab, anzahlErgebnisse);
+	cout << toString();
+	/*cout << "Ausgabe nach Matrikelnummer" << endl << endl
+		<< sortierteAusgabeMatrikel() << endl
+		<< "Ausgabe nach Fachbezeichnung" << endl << endl
+		<< sortierteAusgabeBezeichnung() << endl
+		<< berechneNotenschnitt();*/
 }
-void Auswertung::startReadProgress(fstream& file){
+void Auswertung::startReadProgress(fstream& file) {
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
 	int matrikelNr;
 	double note;
 	stringstream linestream;
-	while (getline(file, completeLine)){
-		try{
+	while (getline(file, completeLine)) {
+		try {
 			lines++;
 			linestream.clear();
 			linestream.str(completeLine);
@@ -48,13 +50,13 @@ void Auswertung::startReadProgress(fstream& file){
 			ergebnisTab[anzahlErgebnisse] = erg;
 			anzahlErgebnisse++;
 		}
-		catch (AuswertungsException& e){
+		catch (AuswertungsException& e) {
 			cout << error_std << e.what() << lines << endl;
 		}
 	}
 }
 
-void Auswertung::splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString){
+void Auswertung::splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString) {
 	stringstream stream;
 	stream.str(toBeSplitted);
 	stream >> firstNewString;
@@ -66,11 +68,11 @@ bool Auswertung::fileExists(string fileName) {
 	ifstream infile(constName);
 	return infile.good();
 }
-int Auswertung::strToMatrikelnummer(stringstream& linestream){
+int Auswertung::strToMatrikelnummer(stringstream& linestream) {
 	int matrikelNr = -1;
 	linestream >> matrikelNr;
 	//mtNummer = stoi(s);
-	if (matrikelNr <= LOWER_BORDER_MATRIKEL_NR || matrikelNr >= UPPER_BORDER_MATRIKEL_NR){
+	if (matrikelNr <= LOWER_BORDER_MATRIKEL_NR || matrikelNr >= UPPER_BORDER_MATRIKEL_NR) {
 		throw AuswertungsException("Matrikelnummer konnte nicht ermittelt werden Line: ");
 	}
 	return matrikelNr;
@@ -78,14 +80,14 @@ int Auswertung::strToMatrikelnummer(stringstream& linestream){
 double Auswertung::strToNote(stringstream& linestream) {
 	double note = -1.0;
 	linestream >> note;
-	if (note <= 0 || note > 6){
+	if (note <= 0 || note > 6) {
 		throw AuswertungsException("Note konnte nicht ermittelt werden");
 	}
 	return note;
 }
-void Auswertung::ausgabe(){
+void Auswertung::ausgabe() {
 	int runner = 0;
-	while (runner < anzahlErgebnisse){
+	while (runner < anzahlErgebnisse) {
 		cout << ergebnisTab[runner]->getMatrikelnummer() << "\t" << /*ergebnisTab[runner]->getFachbezeichnung << "\t" <<*/ ergebnisTab[runner]->getNote() << "\t" << endl;
 		runner++;
 	}
@@ -113,7 +115,7 @@ void Auswertung::trim(string& str) {
 		str.erase(str.begin(), str.end());
 
 }
-ostream& operator<<(ostream& o, const Auswertung& ausw){
+ostream& operator<<(ostream& o, const Auswertung& ausw) {
 	for (int i = 0; i < ausw.anzahlErgebnisse; i++) {
 		o << *ausw.ergebnisTab[i] << endl;
 	}
@@ -130,59 +132,112 @@ string Auswertung::toString() const {
 	return o.str();
 }
 
-void Auswertung::ausgebenFaecher(){
+void Auswertung::ausgebenFaecher() {
 	Ergebnis** faecherErgebnisse = new Ergebnis*[anzahlErgebnisse];
 	//TODO implement this method!
 }
 
-void Auswertung::ausgebenMatrikelNr(){
+void Auswertung::ausgebenMatrikelNr() {
 	//TODO implement this method!
 }
-
-void Auswertung::sortArrayFaecher(Ergebnis** ergebniss, int size){
-	//TODO implement this method!
+void Auswertung::sortArrayNote(Ergebnis** &ergebnisse, int size) {
+	int lowerBorder = 0;
+	sortArrayNote(ergebnisse, size, lowerBorder);
 }
-void Auswertung::sortArrayMatrikelNr(Ergebnis** ergebnisse, int size){
-	//TODO implement this method!
-}
-
-string Auswertung::berechneNotenschnitt(){
-		ostringstream o;
-		int innerRunner = 0;
-		int outputRunner = 0;
-		int absoluteMinimum = LOWER_BORDER_MATRIKEL_NR;
-		int foundMinimum;
-		int found = 0;
-		double note = 0.0;
-		int haufigkeit = 0;
-		o << "Auswertung nach MatrikelNr:" << "\n" << "Matrikelnummer" << "\t" << "Durchschnittsnote" << "\n";
-		while (found != anzahlErgebnisse) {
-			foundMinimum = UPPER_BORDER_MATRIKEL_NR;
-			while (innerRunner < anzahlErgebnisse) {
-				if (ergebnisTab[innerRunner]->getMatrikelnummer() > absoluteMinimum && ergebnisTab[innerRunner]->getMatrikelnummer() < foundMinimum) {
-					foundMinimum = ergebnisTab[innerRunner]->getMatrikelnummer();
-				}
-				innerRunner++;
+void Auswertung::sortArrayNote(Ergebnis** &ergebnisse, int size, int lowerBorder) {
+	Ergebnis* tempErgebnis;
+	double minimum = HIGH_VALUE;
+	for (int i = lowerBorder; i < size; i++) {
+		for (int j = lowerBorder; j < size; j++) {
+			if (ergebnisse[i]->getNote() < ergebnisse[j]->getNote()) {
+				tempErgebnis = ergebnisse[i];
+				ergebnisse[i] = ergebnisse[j];
+				ergebnisse[j] = tempErgebnis;
 			}
-			while (outputRunner < anzahlErgebnisse) {
-				if (ergebnisTab[outputRunner]->getMatrikelnummer() == foundMinimum) {
-					note += ergebnisTab[outputRunner]->getNote();
-					found++;
-					haufigkeit++;
-				}
-				outputRunner++;
-			}
-			note /= haufigkeit;
-			o << foundMinimum << "\t" << "\t" << note << "\n";
-			absoluteMinimum = foundMinimum;
-			innerRunner = 0;
-			haufigkeit = 0;
-			outputRunner = 0;
-			note = 0.0;
 		}
-		return o.str();
 	}
-string Auswertung::sortierteAusgabeMatrikel(){
+}
+
+void Auswertung::sortArrayFaecher(Ergebnis** &ergebnisse, int size) {
+	int lowerB = 0;
+	sortArrayFaecher(ergebnisse, size, lowerB);
+}
+void Auswertung::sortArrayFaecher(Ergebnis** &ergebnisse, int size, int lowerBorder) {
+	Ergebnis** teilTab;
+	teilTab = new Ergebnis*[anzahlErgebnisse];
+	int found = 0;
+	int sizeTeilTab = 0;
+	int position = 0;
+	int runner = 0;
+	int seperator = 0;
+	int minTabPos = 0;
+	bool exist = false;
+	while (found != anzahlErgebnisse) {
+		sizeTeilTab = minTabPos;
+		runner = 0;
+		while (runner < seperator) {
+			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
+				exist = true;
+			}
+			runner++;
+		}
+		runner = position;
+		while (runner < anzahlErgebnisse && !exist) {
+			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
+				teilTab[sizeTeilTab] = ergebnisTab[runner];
+				sizeTeilTab++;
+				found++;
+			}
+			runner++;
+		}
+		minTabPos = sizeTeilTab;
+		exist = false;
+		seperator++;
+		position++;
+	}
+}
+
+void Auswertung::sortArrayMatrikelNr(Ergebnis** &ergebnisse, int size) {
+	//TODO implement this method!
+}
+
+string Auswertung::berechneNotenschnitt() {
+	ostringstream o;
+	int innerRunner = 0;
+	int outputRunner = 0;
+	int absoluteMinimum = LOWER_BORDER_MATRIKEL_NR;
+	int foundMinimum;
+	int found = 0;
+	double note = 0.0;
+	int haufigkeit = 0;
+	o << "Auswertung nach MatrikelNr:" << "\n" << "Matrikelnummer" << "\t" << "Durchschnittsnote" << "\n";
+	while (found != anzahlErgebnisse) {
+		foundMinimum = UPPER_BORDER_MATRIKEL_NR;
+		while (innerRunner < anzahlErgebnisse) {
+			if (ergebnisTab[innerRunner]->getMatrikelnummer() > absoluteMinimum && ergebnisTab[innerRunner]->getMatrikelnummer() < foundMinimum) {
+				foundMinimum = ergebnisTab[innerRunner]->getMatrikelnummer();
+			}
+			innerRunner++;
+		}
+		while (outputRunner < anzahlErgebnisse) {
+			if (ergebnisTab[outputRunner]->getMatrikelnummer() == foundMinimum) {
+				note += ergebnisTab[outputRunner]->getNote();
+				found++;
+				haufigkeit++;
+			}
+			outputRunner++;
+		}
+		note /= haufigkeit;
+		o << foundMinimum << "\t" << "\t" << note << "\n";
+		absoluteMinimum = foundMinimum;
+		innerRunner = 0;
+		haufigkeit = 0;
+		outputRunner = 0;
+		note = 0.0;
+	}
+	return o.str();
+}
+string Auswertung::sortierteAusgabeMatrikel() {
 	ostringstream o;
 	int innerRunner = 0;
 	int outputRunner = 0;
@@ -192,7 +247,7 @@ string Auswertung::sortierteAusgabeMatrikel(){
 	o << "Matrikelnummer" << "\t" << "Fachbezeichnung" << "\t" << "\t" << "Note" << "\n";
 	while (found != anzahlErgebnisse) {
 		foundMinimum = UPPER_BORDER_MATRIKEL_NR;
-		while(innerRunner < anzahlErgebnisse) {
+		while (innerRunner < anzahlErgebnisse) {
 			if (ergebnisTab[innerRunner]->getMatrikelnummer() > absoluteMinimum && ergebnisTab[innerRunner]->getMatrikelnummer() < foundMinimum) {
 				foundMinimum = ergebnisTab[innerRunner]->getMatrikelnummer();
 			}
@@ -223,7 +278,7 @@ string Auswertung::sortierteAusgabeBezeichnung() {
 	int seperator = 0;
 	int minTabPos = 0;
 	bool exist = false;
-	int tabPosition= 0;
+	int tabPosition = 0;
 	double smallestNote;
 	double minPosition;
 	o << "Matrikelnummer" << "\t" << "Fachbezeichnung" << "\t" << "\t" << "Note" << "\n";
@@ -232,14 +287,14 @@ string Auswertung::sortierteAusgabeBezeichnung() {
 		sizeTeilTab = minTabPos;
 		minPosition = 0.0;
 		runner = 0;
-		while(runner < seperator){
+		while (runner < seperator) {
 			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
 				exist = true;
 			}
 			runner++;
 		}
 		runner = position;
-		while (runner < anzahlErgebnisse && !exist){ 
+		while (runner < anzahlErgebnisse && !exist) {
 			if (ergebnisTab[position]->getFachbezeichnung().compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
 				//o << ergebnisTab[runner]->toString();
 				teilTab[sizeTeilTab] = ergebnisTab[runner];
@@ -258,7 +313,7 @@ string Auswertung::sortierteAusgabeBezeichnung() {
 				runner++;
 			}
 			runner = minTabPos;
-			while (runner  < sizeTeilTab) {
+			while (runner < sizeTeilTab) {
 				if (teilTab[runner]->getNote() == smallestNote) {
 					o << teilTab[runner]->toString();
 					foundTab++;
@@ -284,7 +339,7 @@ void Auswertung::checkExistence(int matrikel, string bezeichnung, double note) {
 		if (matrikel == ergebnisTab[runner]->getMatrikelnummer()) {
 			if (bezeichnung.compare(ergebnisTab[runner]->getFachbezeichnung()) == 0) {
 				throw AuswertungsException("Objekt existiert schon Line: ");
-				
+
 			}
 		}
 		runner++;
