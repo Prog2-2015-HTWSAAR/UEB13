@@ -3,7 +3,9 @@ const int AuswertungDialog::ZERO_VALUE = 0;
 const int AuswertungDialog::HIGH_VALUE = 1000;
 const char* AuswertungDialog::error_std = "Datei existiert nicht!!";
 
-AuswertungDialog::AuswertungDialog(){}
+AuswertungDialog::AuswertungDialog(){
+	fileExist = false;
+}
 AuswertungDialog::~AuswertungDialog(){}
 
 void AuswertungDialog::startDialog(){
