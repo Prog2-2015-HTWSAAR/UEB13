@@ -218,6 +218,7 @@ int Auswertung::berechneNotenschnitt(Ergebnis** &durchschnitt) {
 			anz++;
 		}
 	}
+	resetSorted();
 	return anz;
 }
 

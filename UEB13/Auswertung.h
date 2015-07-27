@@ -40,7 +40,7 @@ private:
 	void resetSorted();
 	void sortArrayMatrikelNr(Ergebnis** &ergebnisse, int size);
 	void sortArrayMatrikelNr(Ergebnis **& ergebnisse, int size, int lowerBorder);
-	int Auswertung::berechneNotenschnitt(Ergebnis** &durchschnitt);
+	int berechneNotenschnitt(Ergebnis** &durchschnitt);
 	void startReadProgress(fstream& file);
 	void trim(string& str);
 	void ausgabeNotendurchschnitt(Ergebnis** &durchschnitt, int anzahlSaetze);
