@@ -167,7 +167,7 @@ void Auswertung::sortArrayFaecher() {
 		}
 		for (int j = i+1; j < anzahlErgebnisse; j++) {
 			if (ergebnisTab[i]->getFachbezeichnung().compare(ergebnisTab[j]->getFachbezeichnung()) == 0)  {
-				if (ergebnisTab[j]->getSorted() == 0 && found+1 <anzahlErgebnisse) {
+				if (ergebnisTab[j]->getSorted() == 0 && found <anzahlErgebnisse) {
 					tempErgebnis[found] = ergebnisTab[j];
 					ergebnisTab[j]->setSorted();
 					found++;
@@ -202,7 +202,7 @@ int Auswertung::berechneNotenschnitt(Ergebnis** &durchschnitt) {
 	int haeufMatrikel = 0;
 	for (int i = 0; i < anzahlErgebnisse; i++) {
 		if (ergebnisTab[i]->getSorted() == 0) {
-			haeufMatrikel = 0;
+			haeufMatrikel = 1;
 			note = ergebnisTab[i]->getNote();
 			ergebnisTab[i]->setSorted();
 			for (int j = i + 1; j < anzahlErgebnisse; j++) {
