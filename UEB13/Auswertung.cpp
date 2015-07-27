@@ -28,8 +28,6 @@ void Auswertung::runReadIn(string fileName) {
 	file.close();
 	duchschnittNote = new Ergebnis*[anzahlErgebnisse];
 	sortArrayNote(ergebnisTab, anzahlErgebnisse);
-	cout << toString();
-
 	sortArrayFaecher();
 	anzahlVerschiedenerSaetze = berechneNotenschnitt(duchschnittNote);
 	cout << toString();
@@ -159,6 +157,8 @@ void Auswertung::resetSorted() {
 }
 void Auswertung::sortArrayFaecher() {
 	Ergebnis** tempErgebnis = new Ergebnis*[anzahlErgebnisse];
+	Ergebnis* a = new Ergebnis;
+	Ergebnis b;
 	int found = 0;
 	for (int i = 0; i < anzahlErgebnisse; i++) {
 		if (ergebnisTab[i]->getMatrikelnummer() > 0) {
@@ -167,7 +167,7 @@ void Auswertung::sortArrayFaecher() {
 		}
 		for (int j = i+1; j < anzahlErgebnisse; j++) {
 			if (ergebnisTab[i]->getFachbezeichnung().compare(ergebnisTab[j]->getFachbezeichnung()) == 0)  {
-				if (ergebnisTab[j]->getSorted() == 0 && found < anzahlErgebnisse) {
+				if (ergebnisTab[j]->getSorted() == 0 && found+1 <anzahlErgebnisse) {
 					tempErgebnis[found] = ergebnisTab[j];
 					ergebnisTab[j]->setSorted();
 					found++;
