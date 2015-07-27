@@ -55,7 +55,7 @@ int Ergebnis::compareFaecher(const Ergebnis& ergebnis){
 		if(vergleich != 0){
 			return vergleich;
 		}else{
-			return compareMatrikelNr(ergebnis);
+			return 0;/* compareMatrikelNr(ergebnis);*/
 		}
 	}
 }
