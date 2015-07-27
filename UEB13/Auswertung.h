@@ -40,10 +40,10 @@ private:
 	void resetSorted();
 	void sortArrayMatrikelNr(Ergebnis** &ergebnisse, int size);
 	void sortArrayMatrikelNr(Ergebnis **& ergebnisse, int size, int lowerBorder);
-	string berechneNotenschnitt();
-	void ausgabe();
+	int Auswertung::berechneNotenschnitt(Ergebnis** &durchschnitt);
 	void startReadProgress(fstream& file);
 	void trim(string& str);
+	void ausgabeNotendurchschnitt(Ergebnis** &durchschnitt, int anzahlSaetze);
 	void splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString);
 	int strToMatrikelnummer(stringstream& linestream);
 	double strToNote(stringstream& linestream);

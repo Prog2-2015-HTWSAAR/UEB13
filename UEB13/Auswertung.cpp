@@ -20,13 +20,18 @@ Auswertung::Auswertung() {
 }
 void Auswertung::runReadIn(string fileName) {
 	fstream file;
+	Ergebnis** duchschnittNote;
+	int anzahlVerschiedenerSaetze;
 	const char* fName = fileName.c_str();
 	file.open(fName);
 	startReadProgress(file);
 	file.close();
+	duchschnittNote = new Ergebnis*[anzahlErgebnisse];
 	sortArrayNote(ergebnisTab, anzahlErgebnisse);
 	sortArrayFaecher();
+	anzahlVerschiedenerSaetze = berechneNotenschnitt(duchschnittNote);
 	cout << toString();
+	ausgabeNotendurchschnitt(duchschnittNote, anzahlVerschiedenerSaetze);
 }
 void Auswertung::startReadProgress(fstream& file) {
 	string completeLine, matrikelNrString, fachbezeichnung, notenString;
@@ -52,6 +57,13 @@ void Auswertung::startReadProgress(fstream& file) {
 	}
 }
 
+void Auswertung::ausgabeNotendurchschnitt(Ergebnis** &durchschnitt, int anzahlSaetze) {
+	cout << "Ausgabe Durchschnittsnote: " << endl << "Matrikelnummer" << "\t\t" << "Durchschnittsnote" << endl;
+	sortArrayMatrikelNr(durchschnitt, anzahlSaetze);
+	for (int i = 0; i < anzahlSaetze; i++){
+		cout << durchschnitt[i]->getMatrikelnummer() << "\t\t" << durchschnitt[i]->getNote() << endl;
+	}
+}
 void Auswertung::splitStringToThreeStrings(string& toBeSplitted, string& firstNewString, string& secondNewString, string& thirdNewString) {
 	stringstream stream;
 	stream.str(toBeSplitted);
@@ -81,13 +93,7 @@ double Auswertung::strToNote(stringstream& linestream) {
 	}
 	return note;
 }
-void Auswertung::ausgabe() {
-	int runner = 0;
-	while (runner < anzahlErgebnisse) {
-		cout << ergebnisTab[runner]->getMatrikelnummer() << "\t" << /*ergebnisTab[runner]->getFachbezeichnung << "\t" <<*/ ergebnisTab[runner]->getNote() << "\t" << endl;
-		runner++;
-	}
-}
+
 string Auswertung::readStringInput() {
 	string input;
 	cin >> input;
@@ -190,41 +196,29 @@ void Auswertung::sortArrayMatrikelNr(Ergebnis** &ergebnisse, int size, int lower
 	}
 }
 
-string Auswertung::berechneNotenschnitt() {
-	ostringstream o;
-	int innerRunner = 0;
-	int outputRunner = 0;
-	int absoluteMinimum = LOWER_BORDER_MATRIKEL_NR;
-	int foundMinimum;
-	int found = 0;
-	double note = 0.0;
-	int haufigkeit = 0;
-	o << "Auswertung nach MatrikelNr:" << "\n" << "Matrikelnummer" << "\t" << "Durchschnittsnote" << "\n";
-	while (found != anzahlErgebnisse) {
-		foundMinimum = UPPER_BORDER_MATRIKEL_NR;
-		while (innerRunner < anzahlErgebnisse) {
-			if (ergebnisTab[innerRunner]->getMatrikelnummer() > absoluteMinimum && ergebnisTab[innerRunner]->getMatrikelnummer() < foundMinimum) {
-				foundMinimum = ergebnisTab[innerRunner]->getMatrikelnummer();
+int Auswertung::berechneNotenschnitt(Ergebnis** &durchschnitt) {
+	double note;
+	int anz = 0;
+	int haeufMatrikel = 0;
+	for (int i = 0; i < anzahlErgebnisse; i++) {
+		if (ergebnisTab[i]->getSorted() == 0) {
+			haeufMatrikel = 0;
+			note = ergebnisTab[i]->getNote();
+			ergebnisTab[i]->setSorted();
+			for (int j = i + 1; j < anzahlErgebnisse; j++) {
+				if (ergebnisTab[i]->getMatrikelnummer() == ergebnisTab[j]->getMatrikelnummer() && ergebnisTab[j]->getSorted() == 0) {
+					note += ergebnisTab[j]->getNote();
+					ergebnisTab[j]->setSorted();
+					haeufMatrikel++;
+				}
 			}
-			innerRunner++;
+			note /= haeufMatrikel;
+			Ergebnis*matDurchschnitt = new Ergebnis(ergebnisTab[i]->getMatrikelnummer(), note);
+			durchschnitt[anz] = matDurchschnitt;
+			anz++;
 		}
-		while (outputRunner < anzahlErgebnisse) {
-			if (ergebnisTab[outputRunner]->getMatrikelnummer() == foundMinimum) {
-				note += ergebnisTab[outputRunner]->getNote();
-				found++;
-				haufigkeit++;
-			}
-			outputRunner++;
-		}
-		note /= haufigkeit;
-		o << foundMinimum << "\t" << "\t" << note << "\n";
-		absoluteMinimum = foundMinimum;
-		innerRunner = 0;
-		haufigkeit = 0;
-		outputRunner = 0;
-		note = 0.0;
 	}
-	return o.str();
+	return anz;
 }
 
 void Auswertung::checkExistence(int matrikel, string bezeichnung, double note) {

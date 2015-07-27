@@ -21,6 +21,12 @@ Ergebnis::Ergebnis(int eMatrNummer, string eFachbezeich, double eNote) {
 	note = eNote;
 	sorted = 0;
 }
+Ergebnis::Ergebnis(int eMatrNummer, double eNote) {
+	matrikelnummer = eMatrNummer;
+	fachbezeichnung = "";
+	note = eNote;
+	sorted = 0;
+}
 ostream& operator<<(ostream& o, const Ergebnis& ergebnis){
 	return o << ergebnis.toString();
 }

@@ -14,6 +14,7 @@ class Ergebnis {
 public:
 	Ergebnis();
 	Ergebnis(int eMatrNummer, string eFachbezeich, double eNote);
+	Ergebnis(int eMatrNummer, double eNote);
 
 
 	string getFachbezeichnung() const {
