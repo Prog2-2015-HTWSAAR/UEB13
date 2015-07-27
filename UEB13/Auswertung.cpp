@@ -158,7 +158,7 @@ void Auswertung::resetSorted() {
 	}
 }
 void Auswertung::sortArrayFaecher() {
-	Ergebnis** tempErgebnis = new Ergebnis*[anzahlErgebnisse];
+	Ergebnis** tempErgebnis = new Ergebnis*[anzahlErgebnisse+1];
 	int found = 0;
 	for (int i = 0; i < anzahlErgebnisse; i++) {
 		if (ergebnisTab[i]->getMatrikelnummer() > 0) {
